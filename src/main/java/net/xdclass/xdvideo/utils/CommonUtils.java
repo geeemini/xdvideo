@@ -1,7 +1,7 @@
 package net.xdclass.xdvideo.utils;
 
 /**
- * For:
+ * For: 通用方法类
  *
  * @Author: gemini
  * @Date: 2020/4/8 14:50

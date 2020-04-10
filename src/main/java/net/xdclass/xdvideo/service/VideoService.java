@@ -5,7 +5,7 @@ import net.xdclass.xdvideo.domain.Video;
 import java.util.List;
 
 /**
- * For:
+ * For: video类service
  *
  * @Author: gemini
  * @Date: 2020/4/8 14:48

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * For:
+ * For: video类service的具体实现类
  *
  * @Author: gemini
  * @Date: 2020/4/8 14:49

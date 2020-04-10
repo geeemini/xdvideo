@@ -1,6 +1,7 @@
 package net.xdclass.xdvideo.mapper;
 
 import net.xdclass.xdvideo.domain.Video;
+import net.xdclass.xdvideo.provider.VideoSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -8,7 +9,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import java.util.List;
 
 /**
- * For:
+ * For: 视频类的dao接口
  *
  * @Author: gemini
  * @Date: 2020/4/8 16:06
@@ -28,7 +29,8 @@ public interface VideoMapper {
     @Select("select * from video where id = #{id}")
     Video findById(int id);
 
-    @Update("update video set title=#{title} where id = #{id}")
+//    @Update("update video set title=#{title} where id = #{id}")
+    @UpdateProvider(type = VideoSqlProvider.class,method = "updateVideo")
     int updateById(Video video);
 
     @Delete("delete from video where id = #{id}")
