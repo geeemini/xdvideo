@@ -76,6 +76,13 @@
 			<version>4.1.0</version>
 		</dependency>
 
+        <!-- JWT相关 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
@@ -88,10 +95,21 @@
 	</build>
 
 	    <repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>http://repo.spring.io/libs-snapshot</url>
-		</repository>
+			<!--<repository>
+                <id>spring-snapshots</id>
+                <url>http://repo.spring.io/libs-snapshot</url>
+            </repository>-->
+			<repository>
+				<id>nexus-aliyun</id>
+				<name>nexus-aliyun</name>
+				<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+				<releases>
+					<enabled>true</enabled>
+				</releases>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+			</repository>
 	</repositories>
 
 	<pluginRepositories>
