@@ -1,6 +1,7 @@
 package net.xdclass.xdvideo.controller;
 
 import net.xdclass.xdvideo.config.WeChatConfig;
+import net.xdclass.xdvideo.domain.JsonData;
 import net.xdclass.xdvideo.mapper.VideoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class TestController {
 	@RequestMapping("test_config")
 	public String testConfig(){
         System.out.println(weChatConfig.getAppid()+"---"+weChatConfig.getAppsecret());
+//        return JsonData.buildSuccess("hello xdclass222");
 		return "hello xdclass222";
 	}
 
