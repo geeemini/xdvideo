@@ -4,6 +4,7 @@ import net.xdclass.xdvideo.config.WeChatConfig;
 import net.xdclass.xdvideo.domain.JsonData;
 import net.xdclass.xdvideo.mapper.VideoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+	@Value("${test}")
+	private String test;
+
     @RequestMapping("test")
 	public String test(){
-		return "hello xdclass222";
+		return test;
 	}
 
 	@Autowired
