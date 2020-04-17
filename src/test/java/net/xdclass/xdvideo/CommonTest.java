@@ -5,6 +5,10 @@ import net.xdclass.xdvideo.domain.User;
 import net.xdclass.xdvideo.utils.JwtUtils;
 import org.junit.Test;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class CommonTest {
 
@@ -45,6 +49,14 @@ public class CommonTest {
             System.out.println("解密失败");
         }
 
+    }
+
+    @Test
+    public void testMap(){
+        Integer n = 8;
+        Integer hash = "asda".hashCode();
+//        ConcurrentHashMap
+        System.out.println(hash%n +"===="+((n-1) & hash));
     }
 
 }

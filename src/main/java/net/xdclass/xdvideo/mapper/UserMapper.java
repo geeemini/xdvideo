@@ -3,6 +3,7 @@ package net.xdclass.xdvideo.mapper;
 import net.xdclass.xdvideo.domain.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,8 +21,8 @@ public interface UserMapper {
      * @param userId
      * @return
      */
-    @Select("select * form user where id = #{id}")
-    User findById(@RequestParam(value = "id") int userId);
+    @Select("select * from user where id = #{id}")
+    User findById(@Param("id") int userId);
 
     /**
      * 根据openid找到user
@@ -29,7 +30,7 @@ public interface UserMapper {
      * @return
      */
     @Select("select * from user where openid = #{openid}")
-    User findByOpenId(@RequestParam(value="openid") String openid);
+    User findByOpenId(@Param("openid") String openid);
 
     /**
      * 保存用户信息

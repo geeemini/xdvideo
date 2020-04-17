@@ -51,11 +51,53 @@ public class WeChatConfig {
     private final static String OPEN_QRCODE_URL= "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_login&state=%s#wechat_redirect";
 
     /**
+     * 微信支付商家码
+     */
+    @Value("${wxpay.mer_id}")
+    private String mchId;
+
+    /**
+     * 微信支付key
+     */
+    @Value("${wxpay.key}")
+    private String key;
+
+    /**
+     * 微信支付回调url
+     */
+    @Value("${wxpay.callback}")
+    private String payCallbackUrl;
+
+    /**
      * 微信开放平台 通过code请求access_token的链接
      */
     private final static String OPEN_ACCESS_TOKEN_URL="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
 
     private final static String OPEN_USER_INFO_URL="https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getPayCallbackUrl() {
+        return payCallbackUrl;
+    }
+
+    public void setPayCallbackUrl(String payCallbackUrl) {
+        this.payCallbackUrl = payCallbackUrl;
+    }
 
     public static String getOpenUserInfoUrl() {
         return OPEN_USER_INFO_URL;
