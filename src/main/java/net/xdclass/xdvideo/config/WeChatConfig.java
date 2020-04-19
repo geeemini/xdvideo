@@ -73,7 +73,20 @@ public class WeChatConfig {
      */
     private final static String OPEN_ACCESS_TOKEN_URL="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
 
+    /**
+     * 拿到个人信息的url
+     */
     private final static String OPEN_USER_INFO_URL="https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
+
+    /**
+     * 微信统一下单的url
+     */
+    private final static String UNIFIED_ORDER_URL="http://api.xdclass.net/pay/unifiedorder";
+//    private final static String UNIFIED_ORDER_URL="https://api.mch.weixin.qq.com/pay/unifiedorder";
+
+    public static String getUnifiedOrderUrl() {
+        return UNIFIED_ORDER_URL;
+    }
 
     public String getMchId() {
         return mchId;

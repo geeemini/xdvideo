@@ -10,12 +10,14 @@ import net.xdclass.xdvideo.mapper.VideoMapper;
 import net.xdclass.xdvideo.mapper.VideoOrderMapper;
 import net.xdclass.xdvideo.service.VideoOrderService;
 import net.xdclass.xdvideo.utils.CommonUtils;
+import net.xdclass.xdvideo.utils.HttpUtils;
 import net.xdclass.xdvideo.utils.WXPayUtils;
 import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -79,11 +81,7 @@ public class VideoOrderServiceImpl implements VideoOrderService {
         //生成签名
         //统一下单
         //上面两个合并成一个方法
-        unifiedOrder(order);
-
-
-
-        //获取codeurl
+        String str = unifiedOrder(order);
 
 
         //生成二维码
@@ -113,9 +111,19 @@ public class VideoOrderServiceImpl implements VideoOrderService {
         String sign = WXPayUtils.createSign(map, weChatConfig.getKey()).toUpperCase();
         map.put("sign",sign); // 签名值
         // map转xml
-        String xml = WXPayUtils.mapToXml(map);
-        System.out.println(xml);
+        String payXml = WXPayUtils.mapToXml(map);
+        System.out.println(payXml);
         //统一下单
+        String orderStr = HttpUtils.doPost(WeChatConfig.getUnifiedOrderUrl(),payXml,4000);
+        if(null == orderStr) {
+            return null;
+        }
+
+        Map<String, String> unifiedOrderMap =  WXPayUtils.xmlToMap(orderStr);
+        System.out.println(unifiedOrderMap.toString());
+        if(unifiedOrderMap != null) {
+            return unifiedOrderMap.get("code_url");
+        }
 
         return null;
     }
