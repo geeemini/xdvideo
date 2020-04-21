@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -42,8 +45,10 @@ public class TestController {
 	private VideoMapper videoMapper;
 
 	@RequestMapping("test_db")
-	public Object testDb(){
-		return videoMapper.getAll();
+	public void testDb(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml");
+		response.getWriter().write("success");
+//		return videoMapper.getAll();
 	}
 
 

@@ -39,11 +39,11 @@ public interface VideoOrderMapper {
 
     /**
      * 根据订单号out_trade_no查找订单
-     * @param id
+     * @param outTradeNo
      * @return
      */
     @Select("select * from video_order where out_trade_no = #{outTradeNo} and del = 0")
-    Video findByOutTradeNo(String outTradeNo);
+    VideoOrder findByOutTradeNo(String outTradeNo);
 
     /**
      * 根据id和用户id更改删除标记位的标记
@@ -68,7 +68,8 @@ public interface VideoOrderMapper {
      * @param videoOrder
      * @return
      */
-    @Update("update video_order set state = #{state} ,notify_time = #{notifyTime},openid = #{openid}  " +
+    @Update("update video_order set state = #{state} ,notify_time = #{notifyTime}," +
+            "openid = #{openid}  " +
             "where out_trade_no = #{outTradeNo} and state = 0 and del = 0")
     Integer updateVideoOrderByOutTradeNo(VideoOrder videoOrder);
 

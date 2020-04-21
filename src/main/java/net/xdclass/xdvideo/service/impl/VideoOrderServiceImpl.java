@@ -15,6 +15,9 @@ import net.xdclass.xdvideo.utils.WXPayUtils;
 import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
@@ -49,7 +52,8 @@ public class VideoOrderServiceImpl implements VideoOrderService {
      * @return
      */
     @Override
-    public VideoOrder save(VideoOrderDto videoOrderDto) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String save(VideoOrderDto videoOrderDto) throws Exception {
 
         // 检查是否有对应视频
         Video video = videoMapper.findById(videoOrderDto.getVideoId());
@@ -83,10 +87,17 @@ public class VideoOrderServiceImpl implements VideoOrderService {
         //上面两个合并成一个方法
         String str = unifiedOrder(order);
 
+        return str;
+    }
 
-        //生成二维码
+    @Override
+    public VideoOrder findByOutTradeNo(String outTradeNo) {
+        return videoOrderMapper.findByOutTradeNo(outTradeNo);
+    }
 
-        return null;
+    @Override
+    public Integer updateVideoOrderByOutTradeNo(VideoOrder videoOrder) {
+        return videoOrderMapper.updateVideoOrderByOutTradeNo(videoOrder);
     }
 
 
@@ -96,6 +107,9 @@ public class VideoOrderServiceImpl implements VideoOrderService {
      * @return
      */
     private String unifiedOrder(VideoOrder order) throws Exception {
+
+//        int i = 1/0; //模拟异常
+
         //生成签名
         SortedMap<String,String> map = new TreeMap<>();
         map.put("appid",weChatConfig.getAppid()); //公众号id

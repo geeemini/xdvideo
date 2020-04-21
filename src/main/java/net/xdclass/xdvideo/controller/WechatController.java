@@ -1,10 +1,16 @@
 package net.xdclass.xdvideo.controller;
 
+import jdk.nashorn.internal.ir.WhileNode;
+import jdk.nashorn.internal.objects.annotations.Where;
 import net.xdclass.xdvideo.config.WeChatConfig;
 import net.xdclass.xdvideo.domain.JsonData;
 import net.xdclass.xdvideo.domain.User;
+import net.xdclass.xdvideo.domain.Video;
+import net.xdclass.xdvideo.domain.VideoOrder;
+import net.xdclass.xdvideo.service.VideoOrderService;
 import net.xdclass.xdvideo.service.WechatUserService;
 import net.xdclass.xdvideo.utils.JwtUtils;
+import net.xdclass.xdvideo.utils.WXPayUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * @program: xdvideo
@@ -34,6 +45,9 @@ public class WechatController {
 
     @Autowired
     private WechatUserService wechatUserService;
+
+    @Autowired
+    private VideoOrderService videoOrderService;
     /**
      * 拼装微信扫一扫  登陆url
      * @param access_url
@@ -75,6 +89,58 @@ public class WechatController {
             //state 当前用户页面的地址需要拼接http:// 这样才不会进行站内跳转
             response.sendRedirect(state+"&token="+token+"&name="+user.getName()+"&headerImg="+URLEncoder.encode(user.getHeadImg(),"UTF-8"));
         }
+    }
+
+    /**
+     * 微信支付的回调方法
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/order/callback")
+    public void orderPayCallback(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        InputStream inputStream = request.getInputStream();
+
+        //bufferedReader是包装设计模式，性能更高
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream,"utf-8"));
+        StringBuffer sb = new StringBuffer();
+        String line ;
+        while ((line=in.readLine()) != null){
+            sb.append(line);
+        }
+        in.close();
+        inputStream.close();
+        HashMap<String, String> map = WXPayUtils.xmlToMap(sb.toString());
+        System.out.println(map);
+
+        //支付成功 回调之后，去验证签名是否是一致的，一致的话再去更新订单，
+        SortedMap<String, String> sortedMap = WXPayUtils.hashMapToSortedMap(map);
+
+        //验证签名是否一致
+        if(WXPayUtils.isCorrectPaySign(sortedMap,weChatConfig.getKey())){
+
+            if("SUCCESS".equals(sortedMap.get("result_code"))){
+                String outTradeNo = sortedMap.get("out_trade_no");
+                VideoOrder dbVideoOrder = videoOrderService.findByOutTradeNo(outTradeNo);
+
+                if(null != dbVideoOrder && dbVideoOrder.getState() == 0){
+                    VideoOrder videoOrder = new VideoOrder();
+                    videoOrder.setState(1);
+                    videoOrder.setNotifyTime(new Date());
+                    videoOrder.setOpenid(sortedMap.get("openid"));
+                    videoOrder.setOutTradeNo(sortedMap.get("out_trade_no"));
+
+                    Integer row = videoOrderService.updateVideoOrderByOutTradeNo(videoOrder);
+                    if(row == 1){
+                        response.setContentType("text/xml");
+                        response.getWriter().print("success");
+                        return ;
+                    }
+                }
+            }
+        }
+        response.setContentType("text/xml");
+        response.getWriter().print("fail");
+
 
     }
 

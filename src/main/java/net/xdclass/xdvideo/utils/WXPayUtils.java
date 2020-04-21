@@ -31,9 +31,9 @@ public class WXPayUtils {
      * @return XML数据转换后的Map
      * @throws Exception
      */
-    public static Map<String, String> xmlToMap(String strXML) throws Exception {
+    public static HashMap<String, String> xmlToMap(String strXML) throws Exception {
         try {
-            Map<String, String> data = new HashMap<String, String>();
+            HashMap<String, String> data = new HashMap<String, String>();
             DocumentBuilder documentBuilder = WXPayXmlUtil.newDocumentBuilder();
             InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
             org.w3c.dom.Document doc = documentBuilder.parse(stream);
@@ -123,10 +123,32 @@ public class WXPayUtils {
         return sign;
     }
 
-    public boolean isCorrectPaySign(SortedMap<String,String> params ,String key){
+    /**
+     * 支付成功后微信回调，验证回调的签名和自己生成的签名是否一致
+     * @param params
+     * @param key
+     * @return
+     */
+    public static boolean isCorrectPaySign(SortedMap<String,String> params ,String key){
         String sign = createSign(params,key);
         String weixinPaySign = params.get("sign").toUpperCase();
         return weixinPaySign.equals(sign);
+    }
+
+    /**
+     * 把普通map转为sortedMap
+     * @return
+     */
+    public static SortedMap<String,String> hashMapToSortedMap(HashMap<String,String> map){
+        SortedMap<String,String> sortedMap = new TreeMap<>();
+        if(null != map && map.size() > 0){
+            Iterator<String> it = map.keySet().iterator();
+            while (it.hasNext()){
+                String key = it.next();
+                sortedMap.put(key,map.get(key)==null?"":map.get(key).trim());
+            }
+        }
+        return sortedMap;
     }
 
 }
