@@ -5,6 +5,7 @@ import net.xdclass.xdvideo.domain.User;
 import net.xdclass.xdvideo.domain.Video;
 import net.xdclass.xdvideo.domain.VideoOrder;
 import net.xdclass.xdvideo.dto.VideoOrderDto;
+import net.xdclass.xdvideo.exception.YwException;
 import net.xdclass.xdvideo.mapper.UserMapper;
 import net.xdclass.xdvideo.mapper.VideoMapper;
 import net.xdclass.xdvideo.mapper.VideoOrderMapper;
@@ -13,6 +14,8 @@ import net.xdclass.xdvideo.utils.CommonUtils;
 import net.xdclass.xdvideo.utils.HttpUtils;
 import net.xdclass.xdvideo.utils.WXPayUtils;
 import org.apache.http.HttpRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -34,6 +37,10 @@ import java.util.TreeMap;
 @Service
 public class VideoOrderServiceImpl implements VideoOrderService {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private Logger dataLogger = LoggerFactory.getLogger("dataLogger");
+
     @Autowired
     private WeChatConfig weChatConfig;
 
@@ -54,6 +61,8 @@ public class VideoOrderServiceImpl implements VideoOrderService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public String save(VideoOrderDto videoOrderDto) throws Exception {
+        dataLogger.info("model=video_order`api=save`user_id={}`video_id={}"
+                ,videoOrderDto.getUserId(), videoOrderDto.getVideoId());
 
         // 检查是否有对应视频
         Video video = videoMapper.findById(videoOrderDto.getVideoId());

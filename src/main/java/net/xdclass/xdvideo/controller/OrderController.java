@@ -8,6 +8,7 @@ import com.google.zxing.pdf417.decoder.ec.ErrorCorrection;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import net.xdclass.xdvideo.domain.JsonData;
 import net.xdclass.xdvideo.dto.VideoOrderDto;
+import net.xdclass.xdvideo.exception.YwException;
 import net.xdclass.xdvideo.service.VideoOrderService;
 import net.xdclass.xdvideo.utils.IpUtils;
 import net.xdclass.xdvideo.utils.QRCodeUtils;
@@ -42,7 +43,6 @@ public class OrderController {
     public void saveOrder(@RequestParam(value = "video_id",required = true) Integer videoId
             , HttpServletRequest request
             , HttpServletResponse response) throws Exception {
-
         String ipAddr = IpUtils.getIpAddr(request);
         int userId = 2;
         VideoOrderDto dto = new VideoOrderDto();
