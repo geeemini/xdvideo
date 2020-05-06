@@ -21,6 +21,7 @@ public class VideoController {
     @Autowired
     private VideoServiceImpl videoService;
 
+    @CrossOrigin
     @GetMapping("page")
 	public Object find_all(@RequestParam(value = "page",defaultValue = "0")int page,
                            @RequestParam(value = "size",defaultValue = "10")int size){
